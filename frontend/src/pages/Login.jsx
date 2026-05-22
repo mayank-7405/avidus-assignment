@@ -10,16 +10,17 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(''); // Puraane errors hatao
+    setError(''); 
+
+    // Yahan maine sirf ye ek line dynamic banayi hai
+    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
     try {
-      // Backend ke login raste par request bhej rahe hain
-      const response = await axios.post('/api/auth/login', { email, password });
+      // Yahan ab `${API_URL}` use ho raha hai
+      const response = await axios.post(`${API_URL}/api/auth/login`, { email, password });
       
-      // Agar login success hua toh token aur user data save kar lo
       localStorage.setItem('userInfo', JSON.stringify(response.data));
       
-      // Role ke hisaab se dashboard par bhejo (Role-Based UI logic)
       if (response.data.role === 'Admin') {
         navigate('/admin-dashboard');
       } else {
@@ -27,7 +28,6 @@ function Login() {
       }
       
     } catch (err) {
-      // Agar email/password galat hua toh red color mein error dikhega
       setError(err.response?.data?.message || 'Invalid email or password');
     }
   };
