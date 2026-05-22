@@ -8,6 +8,9 @@ function AdminDashboard() {
   const [logs, setLogs] = useState([]);
   const navigate = useNavigate();
 
+  // 🚨 TERA RENDER KA BACKEND URL YAHAN FIX KAR DIYA HAI 🚨
+  const API_URL = "https://avidus-assignment-1pjn.onrender.com";
+
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const config = { headers: { Authorization: `Bearer ${userInfo?.token}` } };
 
@@ -21,9 +24,10 @@ function AdminDashboard() {
 
   const fetchData = async () => {
     try {
-      const { data: usersData } = await axios.get('/api/admin/users', config);
-      const { data: tasksData } = await axios.get('/api/admin/tasks', config);
-      const { data: logsData } = await axios.get('/api/admin/logs', config);
+      // Yahan API_URL jod diya hai
+      const { data: usersData } = await axios.get(`${API_URL}/api/admin/users`, config);
+      const { data: tasksData } = await axios.get(`${API_URL}/api/admin/tasks`, config);
+      const { data: logsData } = await axios.get(`${API_URL}/api/admin/logs`, config);
       setUsers(usersData);
       setTasks(tasksData);
       setLogs(logsData);
@@ -36,8 +40,8 @@ function AdminDashboard() {
   const toggleUserStatus = async (id, currentStatus) => {
     try {
       const newStatus = currentStatus === 'Active' ? 'Inactive' : 'Active';
-      await axios.patch(`/api/admin/users/${id}`, { status: newStatus }, config);
-      fetchData(); // Data refresh karo
+      await axios.patch(`${API_URL}/api/admin/users/${id}`, { status: newStatus }, config);
+      fetchData(); 
     } catch (error) {
       alert("Error updating status");
     }
@@ -46,8 +50,8 @@ function AdminDashboard() {
   const deleteUser = async (id) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
-        await axios.delete(`/api/admin/users/${id}`, config);
-        fetchData(); // Data refresh karo
+        await axios.delete(`${API_URL}/api/admin/users/${id}`, config);
+        fetchData(); 
       } catch (error) {
         alert("Error deleting user");
       }
@@ -58,7 +62,7 @@ function AdminDashboard() {
   const deleteTask = async (id) => {
     if (window.confirm("Are you sure you want to delete this task?")) {
       try {
-        await axios.delete(`/api/tasks/${id}`, config);
+        await axios.delete(`${API_URL}/api/tasks/${id}`, config);
         fetchData();
       } catch (error) {
         alert("Error deleting task");

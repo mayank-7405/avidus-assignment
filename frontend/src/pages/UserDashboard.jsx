@@ -6,14 +6,16 @@ function UserDashboard() {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [editId, setEditId] = useState(null); // Agar edit kar rahe hain toh ID yahan aayegi
+  const [editId, setEditId] = useState(null); 
   const navigate = useNavigate();
+
+  // 🚨 YAHAN TERA RENDER KA LINK SET KAR DIYA HAI 🚨
+  const API_URL = import.meta.env.VITE_API_URL || "https://avidus-assignment-1pjn.onrender.com";
 
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const config = { headers: { Authorization: `Bearer ${userInfo?.token}` } };
 
   useEffect(() => {
-    // Agar login nahi hai ya galti se Admin idhar aa gaya, toh bahar nikalo
     if (!userInfo || userInfo.role === 'Admin') {
       navigate('/');
       return;
@@ -23,28 +25,28 @@ function UserDashboard() {
 
   const fetchTasks = async () => {
     try {
-      const { data } = await axios.get('/api/tasks', config);
+      // 👈 Yahan API_URL lagaya
+      const { data } = await axios.get(`${API_URL}/api/tasks`, config);
       setTasks(data);
     } catch (error) {
       console.error("Error fetching tasks", error);
     }
   };
 
-  // Naya task banana ya purana update karna
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (editId) {
-        // Update Task API
-        await axios.put(`/api/tasks/${editId}`, { title, description }, config);
-        setEditId(null); // Edit mode band karo
+        // 👈 Update Task API
+        await axios.put(`${API_URL}/api/tasks/${editId}`, { title, description }, config);
+        setEditId(null); 
       } else {
-        // Create Task API
-        await axios.post('/api/tasks', { title, description }, config);
+        // 👈 Create Task API
+        await axios.post(`${API_URL}/api/tasks`, { title, description }, config);
       }
-      setTitle(''); // Form saaf karo
+      setTitle(''); 
       setDescription('');
-      fetchTasks(); // List update karo
+      fetchTasks(); 
     } catch (error) {
       alert("Error saving task");
     }
@@ -53,13 +55,14 @@ function UserDashboard() {
   const handleEdit = (task) => {
     setTitle(task.title);
     setDescription(task.description);
-    setEditId(task._id); // Form ko edit mode mein dalne ke liye
+    setEditId(task._id); 
   };
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this task?')) {
       try {
-        await axios.delete(`/api/tasks/${id}`, config);
+        // 👈 Delete Task API
+        await axios.delete(`${API_URL}/api/tasks/${id}`, config);
         fetchTasks();
       } catch (error) {
         alert("Error deleting task");
