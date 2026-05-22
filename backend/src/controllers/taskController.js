@@ -67,7 +67,7 @@ const deleteTask = async (req, res) => {
         }
 
         // Check ownership
-        if (task.user.toString() !== req.user.id) {
+        if (task.user.toString() !== req.user.id && req.user.role !== 'Admin') {
             return res.status(401).json({ message: 'Not authorized to delete this task' });
         }
 
