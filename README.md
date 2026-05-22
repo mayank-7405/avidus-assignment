@@ -135,3 +135,12 @@ Once both servers are running, visit `http://localhost:5173` and use the followi
 ![User Dashboard](./screenshots/user.png)
 
 ---
+
+---
+## Credentials
+
+user login = username: user@avidus.com
+             password: user123
+admin login = username: admin@avidus.com
+              password: admin123
+---
